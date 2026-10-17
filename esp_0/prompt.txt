@@ -1,0 +1,3 @@
+prendi @rel.ipynb è la mia relazione di laboratorio, voglio che mi prepari la relazione ufficiale in latex, devi mantenere stesso testo, formattazione e struttura e posizionamento delle immagini, deve praticamente essere la versione latex del notebook
+l'immagine è @audio_plot.png 
+creato il file compilalo due volte e  il pdf deve essere salvato in questa cartella

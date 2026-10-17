@@ -1,0 +1,4 @@
+trasferimento dati grandi con ciclo while che si ferma solo quando raggiungo la dimensione attesa, se no si blocca a folate a caso
+occhio riconvertire dati in float e dimensione array
+
+plt.show blocca tutto, o chiudi finestra o codice adessos
