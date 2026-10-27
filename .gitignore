@@ -1,3 +1,5 @@
-*immagini/
+esp_0/immagini/
 *.mov
+*.jpeg
+*.jpg
 Token git.txt
