@@ -1,0 +1,137 @@
+evaluation board con al centro FPGA
+chiede come immaginare di usare l'FPGA negli esperimenti fatti, ragionare sul fatto che prende bit digitali, possso misurare direttamente con fotodiodo ma servono accortezze su voltaggi e amperaggi che arrivano
+
+come si programma, pensando all'hardware simile C++
+due usi: calcolo o elettronica 
+            |
+        processore ---> ha registri di memoria, legge sequenza di istruzioni e fa delle cose con i dati nella memoria attiva
+        CPU 
+
+        Microcontrollore (arduino) come processsore ma + piccolo, - istruzioni
+                ---> pensate per fare piccole cose NON HA SISTEMA OPERATIVO
+        SoC (system on Chip) 
+        GPU scheda grafica, calcoli, a differenza di CPU lavora con MATRICI (anche CPU ma con cicli for)
+        ASIC chip stampato direttamente per quell'applicazione immodificabile
+
+        sono tutti elettronici digitali, 
+        
+        Due interpretazioni di PROGRAMMABILI-----> interpretano un programmma (CPU il programma cambia connaessioni per fare operazioni)
+        
+
+        programmare FPGA non significa fargli eseguire un programma, ma modificare il circuito
+        FPGA----> Field Programmable Gate Array ---> a logica programmabile
+
+    Architetture stanno diventando multicore ovvero possono eseguire più operazioni contemporaneamente, diversi rami paralleli -- difficoltà è che devo sapere come è il mio per usarlo
+    dipendono in base al tipo di dati che voglio trattare, generare in base al mio scopo (es reti beurali max 8 bit, altrimenti spreco esagerato di dati, molto specializzato)
+
+L'FPGA è comodo perché posso farlo lavorare in base alle esigenze che voglio!!!!!!!!!!
+!!  Flessibilità completa tra software e Hardware   !!
+
+
+===================FPGA===============================
+esistono da 30 anni, 
+    lo usavano come tester per circuiti per fare prototipi prima di stampare.
+2008--> progressi nel numero di celle che posso mettere e nelle frequenze a cui lavora
+    ora a volte messi in coìmmerciale per risparmiare  FIRMWARE è aggiornamento di FPGA dentro dispositivi
+
+Differenza nell'uso di ASIC o FPGA
+    alti costi                          costo 20€
+    conviene se ne faccio tanti         prosso fare prove
+    + veloci e treq +                   ...
+
+Celle possono o simulare una porta o immagazzinare memoria in Flip-Flop
+quando programmo collego le celle e gli faccio fare quello che serve
+(Ho Array di celle)
+
+### Effettivamente sta aprendo all' "Open-hardware" voglio sapere come è fatto il codeice della CPU
+
+Nomi dei software
+    - Vivado
+modello ARTIX-7
+    - 100 MHz di clock
+    
+
+tutto quello che c'è è RAM
+
+Non ho nè interprete, nè compilatore agisce sul circuito.
+⚠️🐍🦈☣️⚠️⚠️⚠️ non è roba computazionale, non scrivere come C
+⚠️⚠️ tutte le istruzioni vengono eseguite allo stesso istante 
+           non posso dare 
+           a=5
+           .
+           .
+           .
+           a=6
+    è tutto concorrente ⚠️⚠️No runtime⚠️⚠️
+
+Workflow
+    1) scrivere il circuito
+    2) scrivere programmini per testare che tutto sia fatto bene 
+    3) testbenh si fanno tante simulazioni e controllano risultati
+
+
+==============VERILOG==================================
+modulo
+
+module MyModule ([parameters]); 
+inputs ... 
+outputs ...   (fili al posto di variabili)
+internal variables ...
+... 
+Module Code ... 
+
+endmodule
+
+non ho traduzione in LM
+
+
+dentro il modulo posso avere solo 3 tipo di cose:
+    - dichiarazione di variabili
+    - blocco iniziale
+    - blocco always: dice ad ogni evento che cosa fa re con tutta la roba che c'ha dentro
+        always @ (a or b or sel) 
+        begin 
+        ... 
+        end
+
+    Reg ---> voglio spazio di memoria di 1 bit dove metto quella variabile (flipflp)
+    Wire ---> sposta il valore di un R da qualche altra parte
+
+<size>’<base><value>  ---> (se non metti base da decimale)
+12 8’h5F 6’b11 ’o576 // decimal (default, base 10) // 8-bit hexadecimal (0x5F) 0010 // 6-bit binary (0b110010) // octal (base 8), size omitted
+
+vettori             chiedi gemini
+reg out; 
+reg [7:0] databus;
+wire [1:0] select; 
+wire enabled;  
+
+come assegnare roba:
+per wire --->  assign A = in1 & in2
+reg BLOCCANTE ---> A = 3; (in effetti questo lo scrive prima dell'altro per occupare già variabile)
+reg NON bloccante ----> A<=3; (usamo solo questa che sega) eseguite allo stesso istante e l'effetto lo vedo al clock successivo
+   ha senso: a<=b
+             b<=a 
+             b<=5 ⚠️⚠️ qui non ha senso
+
+------ IF----------
+if (A == B) begin
+    C = 0;
+end else begin
+    C = 1;
+end
+----------CICLO FOR----------
+⚠️⚠️ IN EFFETTI NON È CICLO CRONOLOGICO ma solo modo per non scrivere stessa cosa
+la i sarà un integer, non potrei ridefinirla contemporaneamente
+for (i = 0; i < 16; i = i + 1) begin
+    $display("Current value of i is %d", i);
+end
+------CASE---------------------------
+case (sel)
+    2'b00:   out = 0;
+    2'b01:   out = 1;
+    default: out = 1'bx;
+endcase
+
+
+
